@@ -29,4 +29,7 @@ export type Token = {
     percentage: number;
   };
   last_updated: string; // ISO date string
+  sparkline_in_7d?: null| {
+    price: number[];
+  };
 };
