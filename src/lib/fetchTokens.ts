@@ -3,7 +3,7 @@ import { Token } from '../types/types';
 const tokenCache: Record<string, { data: Token[]; ts: number }> = {};
 const CACHE_TTL = 30 * 1000; // 30 seconds
 
-async function fetchWith429Retry(url: string, options: RequestInit, maxRetries = 2): Promise<Response> {
+async function fetchWith429Retry(url: string, options: RequestInit, maxRetries = 4): Promise<Response> {
   let attempt = 0;
   let delay = 1000;
   while (attempt <= maxRetries) {
