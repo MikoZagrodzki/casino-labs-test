@@ -30,12 +30,12 @@ export default function Navbar() {
         </button>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-6 ">
           <Link href="/tokens/1" className="hover:text-blue-500">
             {t('tokens')}
           </Link>
-          <div className='border-l pl-6 flex items-center gap-1 w-full'>
-            <p>{t('language')}:</p>
+          <div className='border-l pl-6 flex items-center gap-1 w-full text-sm '>
+            <p className='text-sm'>{t('language')}:</p>
             <LanguageSwitcher />
 
           </div>

@@ -7,19 +7,19 @@ import { NextIntlClientProvider } from 'next-intl';
 import { cookies } from 'next/headers';
 import Navbar from './components/Navbar';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://casino-labs-test.vercel.app'),
   title: 'Degen Terminal',
   description: 'Casino Labs Test - Mikolaj Zagrodzki',
+  openGraph: {
+    images: [
+      {
+        url: '/images/og-image.png',
+        alt: 'Degen Terminal',
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({
@@ -37,7 +37,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={` antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <TokenListProvider>
             <Navbar />
