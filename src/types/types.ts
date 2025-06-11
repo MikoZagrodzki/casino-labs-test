@@ -51,8 +51,7 @@ export interface CoinLinks {
   blockchain_site: string[];
   subreddit_url?: string;
   twitter_screen_name?: string;
-  [key: string]: any;
-}
+[key: string]: string | string[] | undefined}
 
 export interface MarketData {
   current_price: { usd: number; [key: string]: number | undefined };
@@ -65,8 +64,7 @@ export interface MarketData {
   atl: { usd: number; [key: string]: number | undefined };
   atl_date: { usd: string; [key: string]: string | undefined };
   sparkline_7d?: { price: number[] };
-  [key: string]: any;
-}
+[key: string]: number | string | null | undefined | { [k: string]: unknown }}
 
 export interface CoinDetails {
   id: string;

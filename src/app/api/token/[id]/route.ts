@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { CoinDetails } from '@/types/types';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const id = params.id;
+export async function GET(req: NextRequest) {
+  // Get ID from pathname: /api/token/[id]
+  const { pathname, searchParams } = new URL(req.url);
+  const id = pathname.split('/').pop();
+
   if (!id) {
     return NextResponse.json<{ error: string }>({ error: 'Coin ID is required' }, { status: 400 });
   }
 
-  // Get params
-  const { searchParams } = new URL(req.url);
   const sparkline = searchParams.get('sparkline') || 'false';
 
   const url = `https://api.coingecko.com/api/v3/coins/${id}?sparkline=${sparkline}`;

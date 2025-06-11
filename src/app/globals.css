@@ -40,3 +40,9 @@ body {
         spin 4.9s linear infinite;
       animation-direction: alternate;
     }
+
+.text-justify-last-center {
+  text-align: justify;
+  text-align-last: center;
+}
+

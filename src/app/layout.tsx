@@ -24,12 +24,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-  params: { locale: string };
-}>) {
-  // Read locale from cookie
+}) {
+  // Get locale from cookies as before
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value;
   // Fallback to 'en' if no cookie is set
@@ -40,7 +38,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NextIntlClientProvider locale={params.locale} messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <TokenListProvider>
             <Navbar />
             {children}

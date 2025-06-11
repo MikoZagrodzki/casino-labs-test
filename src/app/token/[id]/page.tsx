@@ -6,10 +6,12 @@ import TokenDetailsPage from '@/app/components/TokenDetailsPage';
 
 import type { CoinDetails } from '@/types/types';
 
-type PageProps = { params: { id: string } };
+type PageProps = { params: Promise<{ id: string }> };
+
 
 export default async function Page({ params }: PageProps) {
-  // Await params in case they are a Promise 
+  // Await params in case they are a Promise
+  // params is not a Promise (Vercel stable)
   const { id } = await params;
   const coinId = String(id || '').trim();
 
@@ -22,7 +24,7 @@ export default async function Page({ params }: PageProps) {
   let coin: CoinDetails | null = null;
   try {
     coin = await fetchCoinDetails(coinId, { sparkline: true });
-  } catch (err: any) {
+  } catch {
     // If the fetch fails, we can assume the coin does not exist or there was an error
     notFound();
   }

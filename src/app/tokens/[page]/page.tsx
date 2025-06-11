@@ -5,14 +5,16 @@ import { fetchTokens } from '@/lib/fetchTokens';
 import type { Token } from '@/types/types';
 import { getTranslations } from 'next-intl/server';
 
-type PageProps = { params: { page: string } };
+
+type PageProps = { params: Promise<{ page: string }> };
 
 export default async function Page({ params }: PageProps) {
   // Translations
   const t = await getTranslations('fetch');
   // Await params in case they are a Promise
-  const awaitedParams = await params;
-  const pageNum = Number(awaitedParams.page) || 1;
+  // params is not a Promise (Vercel stable)
+const { page } = await params;
+  const pageNum = Number(page) || 1;  
   let initialTokens: Token[] = [];
   let isInitialRateLimit = false;
 
@@ -24,7 +26,7 @@ export default async function Page({ params }: PageProps) {
       isInitialRateLimit = true;
       return (
         <Suspense fallback={<TokensLoading />}>
-          <TokensTable initialTokens={[]} isInitialRateLimit />
+          <TokensTable initialTokens={[]} isInitialRateLimit={isInitialRateLimit} />
         </Suspense>
       );
     }

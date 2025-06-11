@@ -21,7 +21,7 @@ function Pagination({ currentPage, maxPage, onPageChange }: PaginationProps) {
   // Pagination: always show 1, 2-3 before and after current, last
 
   // Always show first page
-  let pages: (number | string)[] = [1];
+  const pages: (number | string)[] = [1];
 
   if (currentPage > 4) {
     pages.push('...');
@@ -196,10 +196,10 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
   return (
     <div className='flex flex-col items-center w-screen'>
       <Header />
-      <div className='overflow-auto max-h-[80dvh] lg:max-h-fit w-full max-w-7xl '>
-        <table className='min-w-max w-full table '>
+      <div className='overflow-auto max-h-[80dvh] lg:max-h-fit w-full max-w-7xl  shadow-lg rounded-b-2xl '>
+        <table className='min-w-max w-full table'>
           <thead>
-            <tr className='bg-gray-50 border-t border-black'>
+            <tr className='bg-gray-50 '>
               <th className='sticky left-0 top-0 bg-gray-50 z-20 px-4 py-2 text-left '>{t('coin')}</th>
               {[t('price'), t('marketCap'), t('24h'), t('last7Days')].map((cell) => {
                 return (

@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Token } from '../types/types';
 import { fetchTokens as fetchTokensApi } from '@/lib/fetchTokens';
 import { toast } from 'react-hot-toast';

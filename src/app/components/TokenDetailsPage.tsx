@@ -2,7 +2,6 @@
 import { useTokenList } from '@/context/tokensContext';
 import type { CoinDetails } from '@/types/types';
 import Image from 'next/image';
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 type Props = { data: CoinDetails };
@@ -12,8 +11,6 @@ export default function TokenDetailsPage({ data }: Props) {
   const t = useTranslations('tokenDetails');
   // Use the context to get the current page for navigation
   const { currentPage } = useTokenList();
-
-  const [coin, setCoin] = useState(data);
 
   // Helper to format big numbers (fixed 'en-US' locale is hydration-safe)
   function formatNumber(num: number | null | undefined, opts: Intl.NumberFormatOptions = {}) {
@@ -29,24 +26,24 @@ export default function TokenDetailsPage({ data }: Props) {
   }
 
   // Handle homepage/blockchain links
-  const homepage = coin.links?.homepage?.[0];
-  const blockchainSite = coin.links?.blockchain_site?.[0];
+  const homepage = data.links?.homepage?.[0];
+  const blockchainSite = data.links?.blockchain_site?.[0];
 
   // Sparkline
-  const sparkline = coin.market_data?.sparkline_7d?.price;
+  const sparkline = data.market_data?.sparkline_7d?.price;
 
   return (
     <div className='flex flex-col items-start max-w-4xl mx-auto  p-6 mt-10 gap-6 '>
       {/* Header */}
       <div className='flex items-center gap-4'>
-        {coin.image?.large && (
-          <Image src={coin.image.large} alt={coin.name} width={48} height={48} className='rounded-full' style={{ background: '#f4f4f4' }} />
+        {data.image?.large && (
+          <Image src={data.image.large} alt={data.name} width={48} height={48} className='rounded-full' style={{ background: '#f4f4f4' }} />
         )}
         <div>
           <h1 className='text-2xl font-bold'>
-            {coin.name} <span className='text-gray-400 uppercase text-lg'>{coin.symbol}</span>
+            {data.name} <span className='text-gray-400 uppercase text-lg'>{data.symbol}</span>
           </h1>
-          {coin.market_cap_rank && <p className='text-xs text-gray-500'>{t('rank', { rank: coin.market_cap_rank })}</p>}
+          {data.market_cap_rank && <p className='text-xs text-gray-500'>{t('rank', { rank: data.market_cap_rank })}</p>}
         </div>
       </div>
 
@@ -55,43 +52,43 @@ export default function TokenDetailsPage({ data }: Props) {
 
         <div className='flex flex-col  gap-2 w-full lg:w-1/2'>
           <p>
-            <b>{t('currentPrice')}:</b> ${formatNumber(coin.market_data?.current_price?.usd, { maximumFractionDigits: 8 })}
+            <b>{t('currentPrice')}:</b> ${formatNumber(data.market_data?.current_price?.usd, { maximumFractionDigits: 8 })}
           </p>
           <p>
-            <b>{t('marketCap')}:</b> ${formatNumber(coin.market_data?.market_cap?.usd)}
+            <b>{t('marketCap')}:</b> ${formatNumber(data.market_data?.market_cap?.usd)}
           </p>
           <p>
             <b>{t('change24h')}:</b>
-            <span className={(coin.market_data?.price_change_percentage_24h ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}>
-              {coin.market_data?.price_change_percentage_24h?.toFixed(2)}%
+            <span className={(data.market_data?.price_change_percentage_24h ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}>
+              {data.market_data?.price_change_percentage_24h?.toFixed(2)}%
             </span>
           </p>
           <p>
-            <b>{t('totalSupply')}:</b> {formatNumber(coin.market_data?.total_supply)}
+            <b>{t('totalSupply')}:</b> {formatNumber(data.market_data?.total_supply)}
           </p>
           <p>
-            <b>{t('circulatingSupply')}:</b> {formatNumber(coin.market_data?.circulating_supply)}
+            <b>{t('circulatingSupply')}:</b> {formatNumber(data.market_data?.circulating_supply)}
           </p>
         </div>
 
         <div className='flex flex-col  gap-2 w-full lg:w-1/2'>
           <p>
-            <b>{t('allTimeHigh')}:</b> ${formatNumber(coin.market_data?.ath?.usd)}
-            <span className='text-xs text-gray-500 ml-1'>({formatDate(coin.market_data?.ath_date?.usd)})</span>
+            <b>{t('allTimeHigh')}:</b> ${formatNumber(data.market_data?.ath?.usd)}
+            <span className='text-xs text-gray-500 ml-1'>({formatDate(data.market_data?.ath_date?.usd)})</span>
           </p>
           <p>
-            <b>{t('allTimeLow')}:</b> ${formatNumber(coin.market_data?.atl?.usd)}{' '}
-            <span className='text-xs text-gray-500 ml-1'>({formatDate(coin.market_data?.atl_date?.usd)})</span>
+            <b>{t('allTimeLow')}:</b> ${formatNumber(data.market_data?.atl?.usd)}{' '}
+            <span className='text-xs text-gray-500 ml-1'>({formatDate(data.market_data?.atl_date?.usd)})</span>
           </p>
           <p>
-            <b>{t('genesisDate')}:</b> {formatDate(coin.genesis_date)}
+            <b>{t('genesisDate')}:</b> {formatDate(data.genesis_date)}
           </p>
           <p>
-            <b>{t('categories')}:</b> {coin.categories && coin.categories.length > 0 ? coin.categories.join(', ') : t('noData')}
+            <b>{t('categories')}:</b> {data.categories && data.categories.length > 0 ? data.categories.join(', ') : t('noData')}
           </p>
           <p>
-            <b>{t('sentiment')}:</b> 👍 {coin.sentiment_votes_up_percentage ?? t('noData')}% &nbsp; 👎
-            {coin.sentiment_votes_down_percentage ?? t('noData')}%
+            <b>{t('sentiment')}:</b> 👍 {data.sentiment_votes_up_percentage ?? t('noData')}% &nbsp; 👎
+            {data.sentiment_votes_down_percentage ?? t('noData')}%
           </p>
         </div>
       </div>
@@ -115,16 +112,16 @@ export default function TokenDetailsPage({ data }: Props) {
                 </a>
               </li>
             )}
-            {coin.links?.subreddit_url && (
+            {data.links?.subreddit_url && (
               <li>
-                <a href={coin.links.subreddit_url} target='_blank' rel='noopener noreferrer'>
+                <a href={data.links.subreddit_url} target='_blank' rel='noopener noreferrer'>
                   {t('reddit')}
                 </a>
               </li>
             )}
-            {coin.links?.twitter_screen_name && (
+            {data.links?.twitter_screen_name && (
               <li>
-                <a href={`https://twitter.com/${coin.links.twitter_screen_name}`} target='_blank' rel='noopener noreferrer'>
+                <a href={`https://twitter.com/${data.links.twitter_screen_name}`} target='_blank' rel='noopener noreferrer'>
                   {t('twitter')}
                 </a>
               </li>
@@ -155,10 +152,10 @@ export default function TokenDetailsPage({ data }: Props) {
       </div>
 
       {/* Description */}
-      {coin.description?.en && (
-        <div className='prose prose-sm max-w-none mb-4'>
+      {data.description?.en && (
+        <div className='prose prose-sm text-justify-last-center  max-w-none mb-4'>
           <b>{t('description')}:</b>
-          <div dangerouslySetInnerHTML={{ __html: coin.description.en }} />
+          <div dangerouslySetInnerHTML={{ __html: data.description.en }} />
         </div>
       )}
 
