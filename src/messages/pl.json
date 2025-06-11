@@ -1,0 +1,14 @@
+{
+  "tokensTable": {
+    "retrying": "Ponowne ładowanie tokenów...",
+    "rateLimitError": "Nie udało się załadować tokenów z powodu limitu zapytań. Spróbuj ponownie za chwilę.",
+    "retry": "Spróbuj ponownie",
+    "coin": "Moneta",
+    "price": "Cena",
+    "marketCap": "Kapitalizacja rynkowa",
+    "24h": "24h",
+    "last7Days": "Ostatnie 7 dni",
+    "viewDetails": "Zobacz szczegóły dla {coin}",
+    "noData": "—"
+  }
+}

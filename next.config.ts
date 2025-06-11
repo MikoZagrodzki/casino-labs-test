@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   /* Needed for images from coingecko */
@@ -15,4 +15,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin(); // No path param needed in v4+
+
+export default withNextIntl(nextConfig);

@@ -1,26 +1,25 @@
-import { Token } from '@/types/types';
+import { CoinDetails } from '@/types/types';
 
-const tokenCache: Record<string, { data: Token[]; ts: number }> = {};
+const detailsCache: Record<string, { data: CoinDetails; ts: number }> = {};
 const CACHE_TTL = 30 * 1000; // 30 seconds
 
-type FetchTokensParams = {
-  page?: number;
-  perPage?: number;
+type FetchCoinDetailsOptions = {
+  sparkline?: boolean;
 };
-export async function fetchTokens({ page = 1, perPage = 10 }: FetchTokensParams = {}): Promise<Token[]> {
-  const cacheKey = `${page}:${perPage}`;
+export async function fetchCoinDetails(id: string, options: FetchCoinDetailsOptions = {}): Promise<CoinDetails> {
+  const sparkline = options.sparkline ? 'true' : 'false';
+  const cacheKey = `${id}:${sparkline}`;
   const now = Date.now();
 
   // Try cache first
-  if (tokenCache[cacheKey] && now - tokenCache[cacheKey].ts < CACHE_TTL) {
-    return tokenCache[cacheKey].data;
+  if (detailsCache[cacheKey] && now - detailsCache[cacheKey].ts < CACHE_TTL) {
+    return detailsCache[cacheKey].data;
   }
 
   let url: string;
   // Check if we are in a server environment
   const isServer = typeof window === 'undefined';
   const apiKey = isServer ? process.env.COINGECKO_API_KEY : undefined;
-
   // Always use a plain object for headers
   const headers: Record<string, string> = { accept: 'application/json' };
   if (isServer && apiKey) {
@@ -28,9 +27,9 @@ export async function fetchTokens({ page = 1, perPage = 10 }: FetchTokensParams 
   }
   // Determine the URL based on server or client context
   if (isServer) {
-    url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=true`;
+    url = `https://api.coingecko.com/api/v3/coins/${id}?sparkline=${sparkline}`;
   } else {
-    url = `/api/tokens?page=${page}&perPage=${perPage}`;
+    url = `/api/token/${id}?sparkline=${sparkline}`;
   }
 
   try {
@@ -39,11 +38,11 @@ export async function fetchTokens({ page = 1, perPage = 10 }: FetchTokensParams 
       cache: 'no-store',
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch tokens. Status: ${res.status}`);
+      throw new Error(`Failed to fetch coin details. Status: ${res.status}`);
     }
-    // Parse the response as Token array
-    const data = (await res.json()) as Token[];
-    tokenCache[cacheKey] = { data, ts: now };
+    // Parse the response as CoinDetails type
+    const data = (await res.json()) as CoinDetails;
+    detailsCache[cacheKey] = { data, ts: now };
     return data;
   } catch (err: unknown) {
     if (err instanceof TypeError) {

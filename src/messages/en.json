@@ -1,0 +1,14 @@
+{
+  "tokensTable": {
+    "retrying": "Retrying to load tokens...",
+    "rateLimitError": "Failed to load tokens due to rate limiting. Please try again in a moment.",
+    "retry": "Retry",
+    "coin": "Coin",
+    "price": "Price",
+    "marketCap": "Market Cap",
+    "24h": "24h",
+    "last7Days": "Last 7 Days",
+    "viewDetails": "View details for {coin}",
+    "noData": "—"
+  }
+}
