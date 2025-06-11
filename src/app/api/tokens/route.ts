@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   // Parse query params for page/perPage
   const { searchParams } = new URL(req.url);
   const page = searchParams.get('page') || '1';
-  const perPage = searchParams.get('perPage') || '15';
+  const perPage = searchParams.get('perPage') || '25';
 
   const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=true`;
 

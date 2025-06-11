@@ -8,7 +8,58 @@
     "marketCap": "Market Cap",
     "24h": "24h",
     "last7Days": "Last 7 Days",
-    "viewDetails": "View details for {coin}",
+    "viewDetails": "View details for ",
     "noData": "—"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "ariaPrevious": "Go to previous page",
+    "ariaNext": "Go to next page"
+  },
+  "tokenDetails": {
+    "rank": "Rank #{rank}",
+    "currentPrice": "Current Price",
+    "marketCap": "Market Cap",
+    "change24h": "24h Change",
+    "totalSupply": "Total Supply",
+    "circulatingSupply": "Circulating Supply",
+    "allTimeHigh": "All-Time High",
+    "allTimeLow": "All-Time Low",
+    "genesisDate": "Genesis Date",
+    "categories": "Categories",
+    "sentiment": "Sentiment",
+    "links": "Links",
+    "website": "Website",
+    "blockchainExplorer": "Blockchain Explorer",
+    "reddit": "Reddit",
+    "twitter": "Twitter",
+    "priceLast7d": "Price Last 7d",
+    "description": "Description",
+    "backToList": "← Back to list",
+    "noData": "No data",
+    "upvote": "👍 {up}%",
+    "downvote": "👎 {down}%",
+    "dateFormat": "{month}-{day}-{year}"
+  },
+  "fetch":{
+    "error": "An error occurred while fetching data. Please try again later.",
+    "loading": "Loading data...",
+    "noResults": "No results found."
+  },
+  "header": {
+    "welcome": "Welcome to",
+    "subtitle": "where finding your next gem is just a click away"
+  },
+  "navbar": {
+    "home": "Home",
+    "tokens": "Tokens",
+    "language": "Language",
+    "darkModeOff": "Dark Mode",
+    "darkModeOn": "Light Mode"
+  },
+  "tokensLoading": {
+    "header": "Hang tight...",
+    "info": "Coins are being loaded..."
   }
 }

@@ -1,19 +1,26 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 export default function LanguageSwitcher() {
-  const router = useRouter();
+  const [selectedLocale, setSelectedLocale] = useState('en');
+
+  useEffect(() => {
+    // Read locale from cookies on mount
+    const cookieMatch = document.cookie.match(/locale=([a-zA-Z-]+)/);
+    if (cookieMatch) {
+      setSelectedLocale(cookieMatch[1]);
+    }
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    // Update the locale in a cookie and reload the page
     const newLocale = e.target.value;
-    // 1 year expiration
-    document.cookie = `locale=${newLocale}; path=/; max-age=31536000`; 
+    setSelectedLocale(newLocale);
+    document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
     window.location.reload();
   }
 
   return (
-    <select onChange={handleChange} defaultValue="">
+    <select className='text-left' onChange={handleChange} value={selectedLocale}>
       <option value="" disabled>Select language</option>
       <option value="en">English</option>
       <option value="pl">Polski</option>

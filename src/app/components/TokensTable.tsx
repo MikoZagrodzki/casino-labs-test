@@ -7,7 +7,7 @@ import { useTokenList } from '@/context/tokensContext';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-
+import Header from './Header';
 
 const MAX_PAGE = 250;
 
@@ -39,14 +39,17 @@ function Pagination({ currentPage, maxPage, onPageChange }: PaginationProps) {
   // Always show last page, if >1
   if (maxPage > 1) pages.push(maxPage);
 
+  // Translations
+  const t = useTranslations('pagination');
+
   return (
-    <div className='flex items-center justify-center gap-2 py-4'>
+    <div className='flex items-center justify-center gap-2 py-4 px-2'>
       <button
-        className='text-gray-400 px-2'
+        className='text-black px-2'
         // On click, change to previous page, but not going below 1
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
-        aria-label='Previous page'
+        aria-label={t('ariaPrevious')}
       >
         &lt;
       </button>
@@ -56,7 +59,7 @@ function Pagination({ currentPage, maxPage, onPageChange }: PaginationProps) {
             key={page}
             onClick={() => onPageChange(page)}
             className={`w-10 h-10 rounded-lg text-lg font-semibold ${
-              page === currentPage ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100 text-gray-900'
+              page === currentPage ? 'bg-black/10 text-black/75' : 'hover:bg-gray-100 text-gray-900'
             }`}
             style={{ fontVariantNumeric: 'tabular-nums' }}
             aria-current={page === currentPage ? 'page' : undefined}
@@ -70,11 +73,11 @@ function Pagination({ currentPage, maxPage, onPageChange }: PaginationProps) {
         )
       )}
       <button
-        className='text-gray-400 px-2'
+        className='text-black px-2'
         // On click, change to next page, but not exceeding maxPage
         onClick={() => onPageChange(Math.min(maxPage, currentPage + 1))}
         disabled={currentPage === maxPage}
-        aria-label='Next page'
+        aria-label={t('ariaNext')}
       >
         &gt;
       </button>
@@ -89,7 +92,7 @@ type TokensTableProps = {
 
 export default function TokensTable({ initialTokens, isInitialRateLimit = false }: TokensTableProps) {
   // Translations
-    const t = useTranslations('tokensTable');
+  const t = useTranslations('tokensTable');
   // Use Next.js router and params to handle page changes
   const router = useRouter();
   // Use Next.js params to get the current page from the URL
@@ -138,7 +141,7 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
     return (
       <div className='flex flex-col items-center py-8'>
         <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4' />
-        <p className='text-blue-700 font-medium'>Retrying to load tokens...</p>
+        <p className='text-blue-700 font-medium'>{t('retrying')}</p>
       </div>
     );
   }
@@ -147,13 +150,15 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
   if (isInitialRateLimit && (!tokens || tokens.length === 0) && !loading) {
     return (
       <div className='flex flex-col items-center py-8'>
-        <p className='text-red-700 font-medium mb-2'>Failed to load tokens due to rate limiting. Please try again in a moment.</p>
+        <p className='text-red-700 font-medium mb-2'>{t('rateLimitError')}</p>
         <button onClick={handleManualRetry} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2'>
-          Retry
+          {t('retry')}
         </button>
       </div>
     );
   }
+
+
 
   // Fetch tokens for the new page
   function handlePageChange(page: number) {
@@ -189,14 +194,19 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
   const displayTokens = tokens.length > 0 ? tokens : initialTokens;
 
   return (
-    <div className='flex flex-col '>
-      <div className='overflow-auto max-h-[100dvh]'>
-        <table className='min-w-max w-full table border-collapse'>
+    <div className='flex flex-col items-center w-screen'>
+      <Header />
+      <div className='overflow-auto max-h-[80dvh] lg:max-h-fit w-full max-w-7xl '>
+        <table className='min-w-max w-full table '>
           <thead>
-            <tr className='bg-gray-50 '>
-              <th className='sticky left-0 top-0 bg-gray-50 z-20 px-4 py-2 text-left '>Coin</th>
-              {['Price', 'Market Cap', '24h', 'Last 7 Days'].map((cell) => {
-                return <th key={cell} className='px-4 py-2 text-right sticky top-0 bg-gray-50'>{cell}</th>
+            <tr className='bg-gray-50 border-t border-black'>
+              <th className='sticky left-0 top-0 bg-gray-50 z-20 px-4 py-2 text-left '>{t('coin')}</th>
+              {[t('price'), t('marketCap'), t('24h'), t('last7Days')].map((cell) => {
+                return (
+                  <th key={cell} className='px-4 py-2 text-right sticky top-0 bg-gray-50'>
+                    {cell}
+                  </th>
+                );
               })}
             </tr>
           </thead>
@@ -204,31 +214,34 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
             {displayTokens.map((coin, index) => (
               <tr
                 key={coin.id}
-                className='border-b last:border-0 cursor-pointer hover:bg-gray-50 duration-300 group'
+                className='border-b border-black/20 last:border-0 cursor-pointer hover:bg-[#f5f5ff] duration-300 group '
                 onClick={() => router.push(`/token/${coin.id}`)}
                 tabIndex={index}
-                aria-label={`View details for ${coin.name}`}
+                aria-label={t('viewDetails', { coin: coin.name })}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') router.push(`/token/${coin.id}`);
                 }}
               >
-                <td className='sticky left-0 bg-white z-10 flex items-center px-4 py-2 group-hover:bg-gray-50 duration-300'>
+                <td className='sticky left-0 bg-white z-10  px-4 py-2 group-hover:bg-[#f5f5ff] duration-300 '>
+                  <div className='flex items-center gap-2'>
                   <Image src={coin.image} alt={`${coin.name} icon`} width={24} height={24} className='object-cover mr-2 ' />
                   <div className='flex flex-col'>
                     <span className='font-semibold text-gray-900'>{coin.name}</span>
                     <p className='text-gray-500 uppercase text-sm'>{coin.symbol}</p>
                   </div>
+
+                  </div>
                 </td>
 
-                <td className='px-4 py-2 text-right text-gray-900'>${formatDecimals(coin.current_price)}</td>
+                <td className='px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 text-gray-900'>${formatDecimals(coin.current_price)}</td>
 
-                <td className='px-4 py-2 text-right text-gray-900 '>${formatNumberShort(coin.market_cap)}</td>
+                <td className='px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 text-gray-900  '>${formatNumberShort(coin.market_cap)}</td>
 
-                <td className={`px-4 py-2 text-right ${coin.price_change_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <td className={`px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 font-semibold ${coin.price_change_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {formatDecimals(coin.price_change_24h)}%
                 </td>
 
-                <td className='px-4 py-2 text-right text-gray-900 '>
+                <td className='px-4 py-2 text-right text-gray-900 bg-white group-hover:bg-[#f5f5ff] duration-300 '>
                   {/* Render sparkline if available, otherwise show placeholder */}
                   {coin.sparkline_in_7d?.price && coin.sparkline_in_7d.price.length > 1 ? (
                     <Sparklines data={coin.sparkline_in_7d.price} width={80} height={24} margin={0}>
@@ -240,7 +253,7 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
                       />
                     </Sparklines>
                   ) : (
-                    <span className='text-gray-400'>—</span>
+                    <span className='text-gray-400'>{t('noData')}</span>
                   )}
                 </td>
               </tr>

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import TokensTableLoading from '@/app/components/TokensTableLoading';
+import TokensLoading from '@/app/components/TokensLoading';
 import { notFound } from 'next/navigation';
 import { fetchCoinDetails } from '@/lib/fetchCoinDetails';
 import TokenDetailsPage from '@/app/components/TokenDetailsPage';
@@ -28,7 +28,7 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <Suspense fallback={<TokensTableLoading />}>
+    <Suspense fallback={<TokensLoading />}>
       <TokenDetailsPage data={coin} />
     </Suspense>
   );

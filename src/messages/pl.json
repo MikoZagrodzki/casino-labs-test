@@ -8,7 +8,58 @@
     "marketCap": "Kapitalizacja rynkowa",
     "24h": "24h",
     "last7Days": "Ostatnie 7 dni",
-    "viewDetails": "Zobacz szczegóły dla {coin}",
+    "viewDetails": "Zobacz szczegóły dla ",
     "noData": "—"
+  },
+  "pagination": {
+    "previous": "Poprzedne",
+    "next": "Następne",
+    "ariaPrevious": "Przejdź do poprzedniej strony",
+    "ariaNext": "Przejdź do następnej strony"
+  },
+  "tokenDetails": {
+    "rank": "Pozycja #{rank}",
+    "currentPrice": "Aktualna cena",
+    "marketCap": "Kapitalizacja rynkowa",
+    "change24h": "Zmiana 24h",
+    "totalSupply": "Całkowita podaż",
+    "circulatingSupply": "Obiegowa podaż",
+    "allTimeHigh": "Najwyższa cena (ATH)",
+    "allTimeLow": "Najniższa cena (ATL)",
+    "genesisDate": "Data powstania",
+    "categories": "Kategorie",
+    "sentiment": "Nastroje",
+    "links": "Linki",
+    "website": "Strona internetowa",
+    "blockchainExplorer": "Blockchain Explorer",
+    "reddit": "Reddit",
+    "twitter": "Twitter",
+    "priceLast7d": "Cena z ostatnich 7 dni",
+    "description": "Opis",
+    "backToList": "← Powrót do listy",
+    "noData": "Brak danych",
+    "upvote": "👍 {up}%",
+    "downvote": "👎 {down}%",
+    "dateFormat": "{day}.{month}.{year}"
+  },
+  "fetch": {
+    "error": "Wystąpił błąd podczas pobierania danych. Spróbuj ponownie później.",
+    "loading": "Ładowanie danych...",
+    "noResults": "Brak wyników."
+  },
+  "header": {
+    "welcome": "Witaj w",
+    "subtitle": "gdzie znalezienie kolejnego skarbu jest na wyciągnięcie ręki"
+  },
+  "navbar": {
+    "home": "Strona główna",
+    "tokens": "Tokeny",
+    "language": "Język",
+    "darkModeOff": "Tryb ciemny",
+    "darkModeOn": "Tryb jasny"
+  },
+  "tokensLoading": {
+    "header": "Oczekiwanie...",
+    "info": "Ładowanie monet..."
   }
 }

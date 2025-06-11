@@ -1,26 +1,39 @@
 import { Suspense } from 'react';
-import TokensTableLoading from '@/app/components/TokensTableLoading';
-import TokensTableWrapper from '@/app/components/TokensTableWrapper';
+import TokensLoading from '@/app/components/TokensLoading';
+import TokensTable from '@/app/components/TokensTable';
+import { fetchTokens } from '@/lib/fetchTokens';
+import type { Token } from '@/types/types';
+import { getTranslations } from 'next-intl/server';
 
 type PageProps = { params: { page: string } };
 
 export default async function Page({ params }: PageProps) {
+  // Translations
+  const t = await getTranslations('fetch');
   // Await params in case they are a Promise
-  const { page } = await params;
-  const pageNum = Number(page) || 1;
-  return (
-    <div className='flex flex-col items-center overflow-x-hidden'>
-      <header>
-        <h1>Welcome to Degen Terminal</h1>
-        <p>where finding your next gem is just a click away</p>
-      </header>
-      <main className='w-full h-full'>
-        {/* Loading animation will be rendered while the table is loading */}
-        <Suspense fallback={<TokensTableLoading />}>
-          {/* This is the main component that will render the table */}
-          <TokensTableWrapper page={pageNum} />
+  const awaitedParams = await params;
+  const pageNum = Number(awaitedParams.page) || 1;
+  let initialTokens: Token[] = [];
+  let isInitialRateLimit = false;
+
+  try {
+    initialTokens = await fetchTokens({ page: pageNum, perPage: 15 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error';
+    if (/429/.test(message) || message.toLowerCase().includes('rate limit')) {
+      isInitialRateLimit = true;
+      return (
+        <Suspense fallback={<TokensLoading />}>
+          <TokensTable initialTokens={[]} isInitialRateLimit />
         </Suspense>
-      </main>
-    </div>
+      );
+    }
+    return <div className='text-center text-red-600 py-10'>{t('error')}</div>;
+  }
+
+  return (
+    <Suspense fallback={<TokensLoading />}>
+      <TokensTable initialTokens={initialTokens} />
+    </Suspense>
   );
 }

@@ -3,10 +3,13 @@ import { useTokenList } from '@/context/tokensContext';
 import type { CoinDetails } from '@/types/types';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 type Props = { data: CoinDetails };
 
 export default function TokenDetailsPage({ data }: Props) {
+  // Translations
+  const t = useTranslations('tokenDetails');
   // Use the context to get the current page for navigation
   const { currentPage } = useTokenList();
 
@@ -14,13 +17,13 @@ export default function TokenDetailsPage({ data }: Props) {
 
   // Helper to format big numbers (fixed 'en-US' locale is hydration-safe)
   function formatNumber(num: number | null | undefined, opts: Intl.NumberFormatOptions = {}) {
-    if (num === null || num === undefined || isNaN(num)) return '—';
+    if (num === null || num === undefined || isNaN(num)) return t('noData');
     return num.toLocaleString('en-US', opts); // FIXED locale for SSR/CSR match
   }
 
   // Hydration-safe date format (YYYY-MM-DD)
   function formatDate(date: string | undefined) {
-    if (!date) return '—';
+    if (!date) return t('noData');
     const d = new Date(date);
     return `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}-${d.getFullYear()}`;
   }
@@ -33,9 +36,9 @@ export default function TokenDetailsPage({ data }: Props) {
   const sparkline = coin.market_data?.sparkline_7d?.price;
 
   return (
-    <div className='max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-10'>
+    <div className='flex flex-col items-start max-w-4xl mx-auto  p-6 mt-10 gap-6 '>
       {/* Header */}
-      <div className='flex items-center gap-4 mb-4'>
+      <div className='flex items-center gap-4'>
         {coin.image?.large && (
           <Image src={coin.image.large} alt={coin.name} width={48} height={48} className='rounded-full' style={{ background: '#f4f4f4' }} />
         )}
@@ -43,119 +46,127 @@ export default function TokenDetailsPage({ data }: Props) {
           <h1 className='text-2xl font-bold'>
             {coin.name} <span className='text-gray-400 uppercase text-lg'>{coin.symbol}</span>
           </h1>
-          {coin.market_cap_rank && <p className='text-xs text-gray-500'>Rank #{coin.market_cap_rank}</p>}
+          {coin.market_cap_rank && <p className='text-xs text-gray-500'>{t('rank', { rank: coin.market_cap_rank })}</p>}
         </div>
       </div>
 
       {/* Price & Stats */}
-      <div className='mb-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2'>
-        <div>
-          <b>Current Price:</b> ${formatNumber(coin.market_data?.current_price?.usd, { maximumFractionDigits: 8 })}
+      <div className=' flex flex-col lg:flex-row gap-4 '>
+
+        <div className='flex flex-col  gap-2 w-full lg:w-1/2'>
+          <p>
+            <b>{t('currentPrice')}:</b> ${formatNumber(coin.market_data?.current_price?.usd, { maximumFractionDigits: 8 })}
+          </p>
+          <p>
+            <b>{t('marketCap')}:</b> ${formatNumber(coin.market_data?.market_cap?.usd)}
+          </p>
+          <p>
+            <b>{t('change24h')}:</b>
+            <span className={(coin.market_data?.price_change_percentage_24h ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}>
+              {coin.market_data?.price_change_percentage_24h?.toFixed(2)}%
+            </span>
+          </p>
+          <p>
+            <b>{t('totalSupply')}:</b> {formatNumber(coin.market_data?.total_supply)}
+          </p>
+          <p>
+            <b>{t('circulatingSupply')}:</b> {formatNumber(coin.market_data?.circulating_supply)}
+          </p>
         </div>
-        <div>
-          <b>Market Cap:</b> ${formatNumber(coin.market_data?.market_cap?.usd)}
-        </div>
-        <div>
-          <b>24h Change:</b>{' '}
-          <span className={(coin.market_data?.price_change_percentage_24h ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}>
-            {coin.market_data?.price_change_percentage_24h?.toFixed(2)}%
-          </span>
-        </div>
-        <div>
-          <b>Total Supply:</b> {formatNumber(coin.market_data?.total_supply)}
-        </div>
-        <div>
-          <b>Circulating Supply:</b> {formatNumber(coin.market_data?.circulating_supply)}
-        </div>
-        <div>
-          <b>All-Time High:</b> ${formatNumber(coin.market_data?.ath?.usd)}{' '}
-          <span className='text-xs text-gray-500'>({formatDate(coin.market_data?.ath_date?.usd)})</span>
-        </div>
-        <div>
-          <b>All-Time Low:</b> ${formatNumber(coin.market_data?.atl?.usd)}{' '}
-          <span className='text-xs text-gray-500'>({formatDate(coin.market_data?.atl_date?.usd)})</span>
-        </div>
-        <div>
-          <b>Genesis Date:</b> {formatDate(coin.genesis_date)}
-        </div>
-        <div>
-          <b>Categories:</b> {coin.categories && coin.categories.length > 0 ? coin.categories.join(', ') : '—'}
-        </div>
-        <div>
-          <b>Sentiment:</b> 👍 {coin.sentiment_votes_up_percentage ?? '—'}% &nbsp; 👎 {coin.sentiment_votes_down_percentage ?? '—'}%
+
+        <div className='flex flex-col  gap-2 w-full lg:w-1/2'>
+          <p>
+            <b>{t('allTimeHigh')}:</b> ${formatNumber(coin.market_data?.ath?.usd)}
+            <span className='text-xs text-gray-500 ml-1'>({formatDate(coin.market_data?.ath_date?.usd)})</span>
+          </p>
+          <p>
+            <b>{t('allTimeLow')}:</b> ${formatNumber(coin.market_data?.atl?.usd)}{' '}
+            <span className='text-xs text-gray-500 ml-1'>({formatDate(coin.market_data?.atl_date?.usd)})</span>
+          </p>
+          <p>
+            <b>{t('genesisDate')}:</b> {formatDate(coin.genesis_date)}
+          </p>
+          <p>
+            <b>{t('categories')}:</b> {coin.categories && coin.categories.length > 0 ? coin.categories.join(', ') : t('noData')}
+          </p>
+          <p>
+            <b>{t('sentiment')}:</b> 👍 {coin.sentiment_votes_up_percentage ?? t('noData')}% &nbsp; 👎
+            {coin.sentiment_votes_down_percentage ?? t('noData')}%
+          </p>
         </div>
       </div>
 
+      <div className=' flex flex-col lg:flex-row gap-4 w-full'>
       {/* Links */}
-      <div className='mb-4'>
-        <b>Links:</b>
-        <ul className='list-disc ml-6 text-blue-600'>
-          {homepage && (
-            <li>
-              <a href={homepage} target='_blank' rel='noopener noreferrer'>
-                Website
-              </a>
-            </li>
-          )}
-          {blockchainSite && (
-            <li>
-              <a href={blockchainSite} target='_blank' rel='noopener noreferrer'>
-                Blockchain Explorer
-              </a>
-            </li>
-          )}
-          {coin.links?.subreddit_url && (
-            <li>
-              <a href={coin.links.subreddit_url} target='_blank' rel='noopener noreferrer'>
-                Reddit
-              </a>
-            </li>
-          )}
-          {coin.links?.twitter_screen_name && (
-            <li>
-              <a href={`https://twitter.com/${coin.links.twitter_screen_name}`} target='_blank' rel='noopener noreferrer'>
-                Twitter
-              </a>
-            </li>
-          )}
-        </ul>
-      </div>
-
-      {/* Sparkline Chart */}
-      {sparkline && sparkline.length > 0 && (
-        <div className='mb-6'>
-          <b>Price Last 7d:</b>
-          <svg width='200' height='40'>
-            <polyline
-              fill='none'
-              stroke='#7c3aed'
-              strokeWidth='2'
-              points={sparkline
-                .map(
-                  (price, i) =>
-                    `${(i / (sparkline.length - 1)) * 200},${
-                      40 - ((price - Math.min(...sparkline)) / (Math.max(...sparkline) - Math.min(...sparkline) || 1)) * 30
-                    }`
-                )
-                .join(' ')}
-            />
-          </svg>
+        <div className='flex flex-col gap-2 w-full lg:w-1/2'>
+          <b>{t('links')}:</b>
+          <ul className='list-disc ml-6 text-blue-600'>
+            {homepage && (
+              <li>
+                <a href={homepage} target='_blank' rel='noopener noreferrer'>
+                  {t('website')}
+                </a>
+              </li>
+            )}
+            {blockchainSite && (
+              <li>
+                <a href={blockchainSite} target='_blank' rel='noopener noreferrer'>
+                  {t('blockchainExplorer')}
+                </a>
+              </li>
+            )}
+            {coin.links?.subreddit_url && (
+              <li>
+                <a href={coin.links.subreddit_url} target='_blank' rel='noopener noreferrer'>
+                  {t('reddit')}
+                </a>
+              </li>
+            )}
+            {coin.links?.twitter_screen_name && (
+              <li>
+                <a href={`https://twitter.com/${coin.links.twitter_screen_name}`} target='_blank' rel='noopener noreferrer'>
+                  {t('twitter')}
+                </a>
+              </li>
+            )}
+          </ul>
         </div>
-      )}
+        {/* Sparkline Chart */}
+        {sparkline && sparkline.length > 0 && (
+          <div className=' w-full lg:w-1/2'>
+            <b>{t('priceLast7d')}:</b>
+            <svg width='100%' height='100%' viewBox={`0 0 200 50`} preserveAspectRatio='none'>
+              <polyline
+                fill='none'
+                stroke={sparkline[sparkline.length - 1] >= sparkline[0] ? '#16a34a' : '#dc2626'}
+                strokeWidth='1.1'
+                points={sparkline
+                  .map(
+                    (price, i) =>
+                      `${(i / (sparkline.length - 1)) * 200},${
+                        40 - ((price - Math.min(...sparkline)) / (Math.max(...sparkline) - Math.min(...sparkline) || 1)) * 30
+                      }`
+                  )
+                  .join(' ')}
+              />
+            </svg>
+          </div>
+        )}
+      </div>
 
       {/* Description */}
       {coin.description?.en && (
         <div className='prose prose-sm max-w-none mb-4'>
-          <b>Description:</b>
+          <b>{t('description')}:</b>
           <div dangerouslySetInnerHTML={{ __html: coin.description.en }} />
         </div>
       )}
 
       <a
         href={currentPage ? `/tokens/${currentPage}` : '/tokens/1'}
-        className='inline-block mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        className='inline-block mt-6 px-4 py-2 bg-black/80 text-white rounded hover:bg-black active:scale-95'
       >
-        ← Back to list
+        {t('backToList')}
       </a>
     </div>
   );

@@ -1,7 +1,10 @@
-export default function TokensTableLoading() {
+import { useTranslations } from 'next-intl';
+export default function TokensLoading() {
+    const t = useTranslations('tokensLoading');
+
   return (
     <div className='flex flex-col items-center justify-center h-full'>
-      <p>Hang tight...</p>
+      <p>{t('header')}</p>
       <svg className='max-w-1/2' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'>
         <circle
           className='spin2'
@@ -15,7 +18,7 @@ export default function TokensTableLoading() {
           strokeLinecap='round'
         />
       </svg>
-      <p className='animate-pulse'>Coins are being loaded...</p>
+      <p className='animate-pulse'>{t('info')}</p>
     </div>
   );
 }
