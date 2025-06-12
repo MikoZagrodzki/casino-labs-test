@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import type { TrendingResponse } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
 
 
 export default function TrendingMarquee() {
@@ -32,20 +33,22 @@ export default function TrendingMarquee() {
 
   return (
     <section className='w-full flex flex-col items-center max-w-7xl overflow-hidden'>
-      <div className='marquee  py-8'>
+      <div className='marquee py-4 lg:py-8'>
         {[...Array(2)].map((_, index) => (
           <div key={index} className='marquee-content marquee-scroll'>
             {trending.coins.map(({ item }, i) => (
               <React.Fragment key={i}>
-                <img
+                <Image
+                  width={20}
+                  height={20}
                   src={item.thumb || '/images/coin-placeholder.png'}
                   alt={item.name}
-                  className='w-6 h-6 rounded-full inline-block align-middle'
+                  className='w-5 h-5 lg:w-6 lg:h-6 rounded-full inline-block align-middle'
                   style={{ display: 'inline-block' }}
                   onClick={() => router.push(`/token/${item.id}`)}
                 />
                 <p
-                  className={`inline-block mr-10 cursor-pointer font-semibold hover:underline ${
+                  className={`inline-block text-sm lg:text-base mr-10 cursor-pointer font-semibold hover:underline ${
                     item.data && item.data.price_change_percentage_24h
                       ? item.data.price_change_percentage_24h.usd > 0
                         ? 'text-green-600'

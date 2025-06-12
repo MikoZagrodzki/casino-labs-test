@@ -7,8 +7,7 @@ import { useTokenList } from '@/context/tokensContext';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import Header from './Header';
-import TrendingMarquee from './TrendingMarquee';
+
 
 const MAX_PAGE = 250;
 
@@ -159,8 +158,6 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
     );
   }
 
-
-
   // Fetch tokens for the new page
   function handlePageChange(page: number) {
     // If the page is the same as the current URL page, do nothing
@@ -195,74 +192,86 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
   const displayTokens = tokens.length > 0 ? tokens : initialTokens;
 
   return (
-    <div className='flex flex-col items-center w-screen overflow-x-hidden'>
-      <Header />
-      <TrendingMarquee />
-      <div className='overflow-auto max-h-[80dvh] lg:max-h-fit w-full max-w-7xl  shadow-lg rounded-b-2xl flex flex-col items-cen'>
-        <table className='min-w-max  table table-fixed '>
-          <thead>
-            <tr className='bg-gray-50 text-xs sm:text-base'>
-              <th className='sticky left-0 top-0 bg-gray-50 z-20 px-4 py-2 text-left w-[170px]'>{t('coin')}</th>
-              {[t('price'), t('marketCap'), t('24h'), t('last7Days')].map((cell) => {
-                return (
-                  <th key={cell} className='px-4 py-2 text-right sticky top-0 bg-gray-50 whitespace-nowrap min-w-[100px]'>
-                    {cell}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {displayTokens.map((coin, index) => (
-              <tr
-                key={coin.id}
-                className='border-b border-black/20 last:border-0 cursor-pointer hover:bg-[#f5f5ff] duration-300 group '
-                onClick={() => router.push(`/token/${coin.id}`)}
-                tabIndex={index}
-                aria-label={t('viewDetails', { coin: coin.name })}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') router.push(`/token/${coin.id}`);
-                }}
-              >
-                <td className='sticky left-0 bg-white z-10  px-4 py-2 group-hover:bg-[#f5f5ff] duration-300 '>
-                  <div className='flex items-center gap-2'>
-                  <Image src={coin.image || '/images/token-placeholder.png'} alt={`${coin.name} icon`} width={24} height={24} className='object-cover mr-2 ' />
+    <div className='overflow-auto max-h-[80dvh] lg:max-h-fit w-full max-w-7xl  shadow-lg rounded-b-2xl flex flex-col '>
+      <table className='min-w-max  table table-fixed '>
+        <thead>
+          <tr className='bg-gray-50 text-xs sm:text-base'>
+            <th className='sticky left-0 top-0 bg-gray-50 z-20 px-4 py-2 text-left w-[170px]'>{t('coin')}</th>
+            {[t('price'), t('marketCap'), t('24h'), t('last7Days')].map((cell) => {
+              return (
+                <th key={cell} className='px-4 py-2 text-right sticky top-0 bg-gray-50 whitespace-nowrap min-w-[100px]'>
+                  {cell}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {displayTokens.map((coin, index) => (
+            <tr
+              key={coin.id}
+              className='border-b border-black/20 last:border-0 cursor-pointer hover:bg-[#f5f5ff] duration-300 group '
+              onClick={() => router.push(`/token/${coin.id}`)}
+              tabIndex={index}
+              aria-label={t('viewDetails', { coin: coin.name })}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') router.push(`/token/${coin.id}`);
+              }}
+            >
+              <td className='sticky left-0 bg-white z-10  px-4 py-2 group-hover:bg-[#f5f5ff] duration-300 '>
+                <div className='flex items-center gap-2'>
+                  <Image
+                    src={coin.image || '/images/token-placeholder.png'}
+                    alt={`${coin.name} icon`}
+                    width={24}
+                    height={24}
+                    className='object-cover mr-2 '
+                  />
                   <div className='flex flex-col'>
-                    <span className='font-semibold text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis max-w-[120px] lg:max-w-[200px]'>{coin.name}</span>
+                    <span className='font-semibold text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis max-w-[120px] lg:max-w-[200px]'>
+                      {coin.name}
+                    </span>
                     <p className='text-gray-500 uppercase text-sm overflow-hidden '>{coin.symbol}</p>
                   </div>
+                </div>
+              </td>
 
-                  </div>
-                </td>
+              <td className='px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 text-gray-900'>
+                ${formatDecimals(coin.current_price)}
+              </td>
 
-                <td className='px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 text-gray-900'>${formatDecimals(coin.current_price)}</td>
+              <td className='px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 text-gray-900  '>
+                ${formatNumberShort(coin.market_cap)}
+              </td>
 
-                <td className='px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 text-gray-900  '>${formatNumberShort(coin.market_cap)}</td>
+              <td
+                className={`px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 font-semibold ${
+                  coin.price_change_24h >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
+                {formatDecimals(coin.price_change_24h)}%
+              </td>
 
-                <td className={`px-4 py-2 text-right bg-white group-hover:bg-[#f5f5ff] duration-300 font-semibold ${coin.price_change_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatDecimals(coin.price_change_24h)}%
-                </td>
+              <td className='px-4 py-2 text-right text-gray-900 bg-white group-hover:bg-[#f5f5ff] duration-300 '>
+                {/* Render sparkline if available, otherwise show placeholder */}
+                {coin.sparkline_in_7d?.price && coin.sparkline_in_7d.price.length > 1 ? (
+                  <Sparklines data={coin.sparkline_in_7d.price} width={80} height={24} margin={0}>
+                    <SparklinesLine
+                      color={
+                        coin.sparkline_in_7d.price[coin.sparkline_in_7d.price.length - 1] >= coin.sparkline_in_7d.price[0] ? '#16a34a' : '#dc2626'
+                      }
+                      style={{ strokeWidth: 0.7, fill: 'none' }}
+                    />
+                  </Sparklines>
+                ) : (
+                  <span className='text-gray-400'>{t('noData')}</span>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-                <td className='px-4 py-2 text-right text-gray-900 bg-white group-hover:bg-[#f5f5ff] duration-300 '>
-                  {/* Render sparkline if available, otherwise show placeholder */}
-                  {coin.sparkline_in_7d?.price && coin.sparkline_in_7d.price.length > 1 ? (
-                    <Sparklines data={coin.sparkline_in_7d.price} width={80} height={24} margin={0}>
-                      <SparklinesLine
-                        color={
-                          coin.sparkline_in_7d.price[coin.sparkline_in_7d.price.length - 1] >= coin.sparkline_in_7d.price[0] ? '#16a34a' : '#dc2626'
-                        }
-                        style={{ strokeWidth: 0.7, fill: 'none' }}
-                      />
-                    </Sparklines>
-                  ) : (
-                    <span className='text-gray-400'>{t('noData')}</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
       {/* Pagination component to handle page changes */}
       <Pagination currentPage={urlPage} maxPage={MAX_PAGE} onPageChange={handlePageChange} />
     </div>

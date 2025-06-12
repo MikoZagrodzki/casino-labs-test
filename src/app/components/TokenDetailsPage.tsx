@@ -3,6 +3,7 @@ import { useTokenList } from '@/context/tokensContext';
 import type { CoinDetails } from '@/types/types';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import BackButton from './BackButton';
 
 type Props = { data: CoinDetails };
 
@@ -159,12 +160,7 @@ export default function TokenDetailsPage({ data }: Props) {
         </div>
       )}
 
-      <a
-        href={currentPage ? `/tokens/${currentPage}` : '/tokens/1'}
-        className='inline-block mt-6 px-4 py-2 bg-black/80 text-white rounded hover:bg-black active:scale-95'
-      >
-        {t('backToList')}
-      </a>
+      <BackButton currentPage={currentPage} translationsSouce='tokenDetails' page='tokens' />
     </div>
   );
 }

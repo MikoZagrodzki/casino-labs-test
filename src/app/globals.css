@@ -6,7 +6,6 @@
 }
 
 body {
-  /* background: var(--background); */
   background: radial-gradient(at 50% 50%, #fafafa 0%, #f5f5f5 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
