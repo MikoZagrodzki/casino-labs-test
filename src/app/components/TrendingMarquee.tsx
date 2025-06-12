@@ -38,7 +38,7 @@ export default function TrendingMarquee() {
             {trending.coins.map(({ item }, i) => (
               <React.Fragment key={i}>
                 <img
-                  src={item.thumb}
+                  src={item.thumb || '/images/coin-placeholder.png'}
                   alt={item.name}
                   className='w-6 h-6 rounded-full inline-block align-middle'
                   style={{ display: 'inline-block' }}

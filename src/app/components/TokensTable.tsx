@@ -226,7 +226,7 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
               >
                 <td className='sticky left-0 bg-white z-10  px-4 py-2 group-hover:bg-[#f5f5ff] duration-300 '>
                   <div className='flex items-center gap-2'>
-                  <Image src={coin.image} alt={`${coin.name} icon`} width={24} height={24} className='object-cover mr-2 ' />
+                  <Image src={coin.image || '/images/token-placeholder.png'} alt={`${coin.name} icon`} width={24} height={24} className='object-cover mr-2 ' />
                   <div className='flex flex-col'>
                     <span className='font-semibold text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis max-w-[120px] lg:max-w-[200px]'>{coin.name}</span>
                     <p className='text-gray-500 uppercase text-sm overflow-hidden '>{coin.symbol}</p>
