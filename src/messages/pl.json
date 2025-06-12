@@ -61,5 +61,9 @@
   "tokensLoading": {
     "header": "Oczekiwanie...",
     "info": "Ładowanie monet..."
+  },
+  "trendingMarquee": {
+    "loading": "Ładowanie trendujących tokenów...",
+    "error": "Wystąpił błąd podczas ładowania trendujących tokenów. Spróbuj ponownie później."
   }
 }

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Header from './Header';
+import TrendingMarquee from './TrendingMarquee';
 
 const MAX_PAGE = 250;
 
@@ -194,8 +195,9 @@ export default function TokensTable({ initialTokens, isInitialRateLimit = false 
   const displayTokens = tokens.length > 0 ? tokens : initialTokens;
 
   return (
-    <div className='flex flex-col items-center w-screen'>
+    <div className='flex flex-col items-center w-screen overflow-x-hidden'>
       <Header />
+      <TrendingMarquee />
       <div className='overflow-auto max-h-[80dvh] lg:max-h-fit w-full max-w-7xl  shadow-lg rounded-b-2xl flex flex-col items-cen'>
         <table className='min-w-max  table table-fixed '>
           <thead>

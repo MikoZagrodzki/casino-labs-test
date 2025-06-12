@@ -61,5 +61,9 @@
   "tokensLoading": {
     "header": "Hang tight...",
     "info": "Coins are being loaded..."
+  },
+  "trendingMarquee": {
+    "loading": "Loading trending tokens...",
+    "error": "Failed to load trending tokens. Please try again later."
   }
 }

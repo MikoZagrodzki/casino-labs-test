@@ -46,3 +46,31 @@ body {
   text-align-last: center;
 }
 
+.marquee{
+  display: flex;
+  overflow:hidden;
+  gap: 1rem;
+  position: relative;
+  user-select: none;
+
+}
+
+.marquee-content{
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  min-width: 100%;
+  gap: 1rem;
+}
+@keyframes scroll {
+  from{
+    transform: translateX(0);
+  }
+  to{
+    transform: translateX(calc(-100% - 1rem));
+  }
+}
+
+.marquee-scroll{
+  animation: scroll 50s linear infinite;
+}
