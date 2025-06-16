@@ -31,7 +31,7 @@ This project is a full-stack cryptocurrency dashboard built with Next.js 15 (App
 
 - Live Demo
 
-https://casino-labs-test.vercel.app/ (replace with your real deploy link)
+https://casino-labs-test.vercel.app/
 
 - Setup & Usage
 
